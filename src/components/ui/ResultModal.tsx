@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useCallback } from "react";
 import { useGameStore } from "@/store/useGameStore";
 import { useAudio } from "@/hooks/useAudio";
-import { triggerConfetti } from "@/components/effects/Confetti"; // 분리한 파일 불러오기
+import { triggerConfetti } from "@/components/effects/Confetti";
+import { cn, truncateText } from "@/lib/utils";
 
 export default function ResultModal() {
     const { winners, setWinners, pickWinner } = useGameStore();
@@ -26,25 +27,16 @@ export default function ResultModal() {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (winner && e.key === "Enter") {
-                handleConfirm();
-            }
+            if (winner && e.key === "Enter") handleConfirm();
         };
 
-        if (winner) {
-            window.addEventListener("keydown", handleKeyDown);
-        }
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
+        if (winner) window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
     }, [winner, handleConfirm]);
 
-    // 효과 적용 부분
     useEffect(() => {
         if (winner) {
             playSound("win");
-            // 이제 한 줄로 실행 가능합니다!
             triggerConfetti();
         }
     }, [winner, playSound]);
@@ -52,27 +44,30 @@ export default function ResultModal() {
     return (
         <AnimatePresence>
             {winner && (
-                <div className="result-modal-overlay">
+                <div className={cn("result-modal-overlay")}>
                     <motion.div
                         initial={{ scale: 0, rotate: -180, opacity: 0 }}
                         animate={{ scale: 1, rotate: 0, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}
                         className="relative z-110 flex flex-col items-center"
                     >
-                        <div className="absolute inset-0 bg-yellow-500/20 blur-[120px] rounded-full animate-pulse" />
+                        {/* CSS 유틸리티로 대체된 배경 빛무리 */}
+                        <div className={cn("modal-glow-bg")} />
 
-                        <div className="text-yellow-400 font-black text-3xl mb-8 tracking-widest animate-bounce">
+                        <div className={cn("congrats-text")}>
                             CONGRATULATIONS!
                         </div>
 
-                        <div className="winner-display-circle">{winner}</div>
+                        <div className={cn("winner-display-circle")}>
+                            {truncateText(winner, 8)}
+                        </div>
 
                         <button
                             onClick={handleCloseClick}
-                            className="confirm-button"
+                            className={cn("confirm-button")}
                         >
                             <span>확인 및 저장</span>
-                            <span className="text-[10px] text-black/50 font-bold mt-1 uppercase tracking-tighter">
+                            <span className={cn("confirm-button-caption")}>
                                 Press Enter
                             </span>
                         </button>

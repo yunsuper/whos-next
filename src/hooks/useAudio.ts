@@ -1,4 +1,5 @@
 "use client";
+import { SoundType } from "@/types";
 
 /**
  * 전역 변수로 AudioContext를 관리하여 메모리 누수와
@@ -33,7 +34,7 @@ export const useAudio = () => {
         return sharedAudioCtx;
     };
 
-    const playSound = (type: "roll" | "win" | "click") => {
+    const playSound = (type: SoundType) => {
         const ctx = initAudio();
         if (!ctx) return;
 

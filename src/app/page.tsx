@@ -7,42 +7,52 @@ import { useGameStore } from "@/store/useGameStore";
 import { Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import Footer from "@/components/layout/Footer";
+import { cn, truncateText } from "@/lib/utils";
+import { useEffect } from "react";
 
 export default function Home() {
-    const { history } = useGameStore();
+    const { history, loadStorage } = useGameStore();
+
+    useEffect(() => {
+        loadStorage();
+    }, [loadStorage]);
 
     return (
-        <main className="main-layout">
-            {/* 배경 장식 */}
-            <div className="ambient-bg">
-                <div className="ambient-purple" />
-                <div className="ambient-blue" />
+        <main className={cn("main-layout")}>
+            {/* 배경 조명 효과 */}
+            <div className={cn("ambient-bg")}>
+                <div className={cn("ambient-purple")} />
+                <div className={cn("ambient-blue")} />
             </div>
 
-            <div className="hero-header">
-                <h1 className="hero-title">WHO&apos;S NEXT?</h1>
-                <p className="hero-subtitle">Your Fate is Rolling</p>
+            {/* 헤더 섹션 */}
+            <div className={cn("hero-header")}>
+                <h1 className={cn("hero-title")}>WHO&apos;S NEXT?</h1>
+                <p className={cn("hero-subtitle")}>Your Fate is Rolling</p>
             </div>
 
-            <div className="content-grid">
-                {/* 로또 머신 섹션 */}
-                <div className="lotto-machine-wrapper">
+            {/* 메인 콘텐츠 그리드 */}
+            <div className={cn("content-grid")}>
+                {/* 1. 로또 머신 섹션 */}
+                <div className={cn("lotto-machine-wrapper")}>
                     <div className="relative z-20">
                         <LottoCanvas />
-                        <div className="absolute top-10 left-10 w-32 h-16 bg-white/5 rounded-[100%] blur-3xl -rotate-45 pointer-events-none" />
+                        {/* 반사광 효과 (유틸리티 클래스로 분리됨) */}
+                        <div className={cn("glass-sheen")} />
                     </div>
 
-                    <div className="lotto-machine-base">
-                        <div className="machine-neck" />
-                        <div className="machine-base-body">
-                            <div className="system-status">
-                                <div className="status-light" />
+                    {/* 머신 하단 받침대 */}
+                    <div className={cn("lotto-machine-base")}>
+                        <div className={cn("machine-neck")} />
+                        <div className={cn("machine-base-body")}>
+                            <div className={cn("system-status")}>
+                                <div className={cn("status-light")} />
                                 <span className="text-sm font-black text-red-500 tracking-widest uppercase">
                                     System Active
                                 </span>
                             </div>
 
-                            <div className="scan-bar-container">
+                            <div className={cn("scan-bar-container")}>
                                 <motion.div
                                     animate={{ x: ["-100%", "100%"] }}
                                     transition={{
@@ -50,20 +60,22 @@ export default function Home() {
                                         duration: 2,
                                         ease: "linear",
                                     }}
-                                    className="scan-bar-active"
+                                    className={cn("scan-bar-active")}
                                 />
                             </div>
                         </div>
+                        {/* 하단 그림자 (UI 클래스로 통합 관리 권장) */}
                         <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-56 h-4 bg-black/60 blur-md rounded-full -z-10" />
                     </div>
                 </div>
 
-                {/* 컨트롤러 & 히스토리 섹션 */}
+                {/* 2. 컨트롤러 & 히스토리 섹션 */}
                 <div className="w-full max-w-md flex flex-col gap-8">
                     <InputGroup />
 
-                    <div className="history-panel">
-                        <div className="history-header">
+                    {/* 당첨 내역 패널 */}
+                    <div className={cn("history-panel")}>
+                        <div className={cn("history-header")}>
                             <div className="flex items-center gap-3 text-yellow-400">
                                 <Trophy size={22} />
                                 <h2 className="font-black text-xl uppercase tracking-wider">
@@ -76,25 +88,32 @@ export default function Home() {
                         </div>
 
                         {history.length > 0 ? (
-                            <div className="grid grid-cols-2 gap-3 max-h-56 overflow-y-auto pr-2 custom-scrollbar">
+                            <div
+                                className={cn(
+                                    "grid grid-cols-2 gap-3 max-h-56 overflow-y-auto pr-2 custom-scrollbar",
+                                )}
+                            >
                                 {history.map((name, idx) => (
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         key={`winner-${idx}-${name}`}
-                                        className="winner-card"
+                                        className={cn(
+                                            "winner-card",
+                                            "hover:border-yellow-500/30 transition-colors",
+                                        )}
                                     >
                                         <span className="text-yellow-500 text-[10px] block mb-1 uppercase tracking-tighter">
                                             WINNER {idx + 1}
                                         </span>
-                                        <span className="truncate block">
-                                            {name}
+                                        <span className="truncate block font-bold">
+                                            {truncateText(name, 10)}
                                         </span>
                                     </motion.div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="history-empty">
+                            <div className={cn("history-empty")}>
                                 <p>No winners yet</p>
                             </div>
                         )}

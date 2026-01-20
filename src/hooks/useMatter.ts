@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
+import { truncateText } from "@/lib/utils";
+import { SoundType } from "@/types";
 
 interface UseMatterProps {
     sceneRef: React.RefObject<HTMLDivElement | null>;
     participants: string[];
     isDrawing: boolean;
-    playSound: (type: "roll" | "win" | "click") => void;
+    playSound: (type: SoundType) => void;
 }
 
 export const useMatter = ({
@@ -20,7 +22,6 @@ export const useMatter = ({
     const requestRef = useRef<number | null>(null);
     const lastBallsCount = useRef(0);
 
-    // 내부 수치는 무조건 400으로 고정 (엔진의 절대 좌표계)
     const FIXED_SIZE = 400;
     const CENTER = 200;
     const RADIUS = 190;
@@ -42,7 +43,7 @@ export const useMatter = ({
             },
         });
 
-        // 1. 원형 벽 생성 (항상 400px 기준)
+        // 1. 원형 벽 생성
         const wallThickness = 100;
         for (let i = 0; i < 60; i++) {
             const angle = (i / 60) * Math.PI * 2;
@@ -58,7 +59,7 @@ export const useMatter = ({
             Matter.World.add(engine.world, wall);
         }
 
-        // 2. 렌더링 및 탈출 방지 (400px 기준 고정)
+        // 2. 렌더링 및 탈출 방지
         Matter.Events.on(render, "afterRender", () => {
             const context = render.context;
             context.font = "bold 12px Arial";
@@ -73,7 +74,6 @@ export const useMatter = ({
                     const dy = body.position.y - CENTER;
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    // 벽 밖으로 나가면 중앙 소환
                     if (distance > RADIUS + 20) {
                         Matter.Body.setPosition(body, { x: CENTER, y: 120 });
                         Matter.Body.setVelocity(body, { x: 0, y: 1 });
@@ -82,10 +82,11 @@ export const useMatter = ({
                     context.save();
                     context.translate(body.position.x, body.position.y);
                     context.rotate(body.angle);
-                    const displayName =
-                        body.label.length > 5
-                            ? body.label.substring(0, 4) + ".."
-                            : body.label;
+
+                    // [수정] 직접 substring 하던 로직을 유틸리티 함수로 교체
+                    // 훨씬 읽기 편하고 깔끔합니다.
+                    const displayName = truncateText(body.label, 5);
+
                     context.fillText(displayName, 0, 0);
                     context.restore();
                 }
@@ -108,7 +109,7 @@ export const useMatter = ({
         };
     }, [sceneRef]);
 
-    // 공 추가 (항상 400px 기준 좌표로 생성)
+    // ... 이하 공 추가 및 섞기 로직 (동일)
     useEffect(() => {
         const engine = engineRef.current;
         const world = engine.world;
@@ -157,7 +158,6 @@ export const useMatter = ({
         lastBallsCount.current = participants.length;
     }, [participants]);
 
-    // 섞기 로직 (생략 - 기존과 동일)
     useEffect(() => {
         let interval: NodeJS.Timeout;
         if (isDrawing) {

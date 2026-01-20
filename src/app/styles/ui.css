@@ -1,0 +1,80 @@
+@layer utilities {
+  /* 패널 및 입력창 */
+  .control-panel {
+    @apply bg-slate-900/50 p-6 rounded-2xl border border-white/10 backdrop-blur-md w-full;
+  }
+
+  .input-field {
+    @apply flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all text-white placeholder:text-slate-500;
+  }
+
+  .participant-item {
+    @apply flex justify-between items-center bg-slate-800/50 px-3 py-2 rounded-md border border-white/5 text-slate-200;
+  }
+
+  /* 버튼 섹션 */
+  .draw-button {
+    @apply flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all shadow-lg;
+  }
+
+  .draw-button-active {
+    @apply bg-linear-to-r from-orange-500 to-yellow-500 hover:from-orange-400 hover:to-yellow-400 text-black;
+  }
+
+  .draw-button-mixing {
+    @apply bg-red-500 animate-pulse cursor-not-allowed text-white;
+  }
+
+  .reset-button {
+    @apply flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl font-bold border border-white/10 transition-colors text-white;
+  }
+
+  /* 히스토리 및 모달 */
+  .history-panel {
+    @apply w-full max-w-md bg-slate-900/80 p-5 md:p-6 rounded-3xl border border-white/10 backdrop-blur-2xl;
+  }
+
+  .history-header {
+    @apply flex items-center justify-between mb-6 border-b border-white/5 pb-4;
+  }
+
+  .history-empty {
+    @apply flex flex-col items-center justify-center h-32 text-slate-600 border-2 border-dashed border-white/5 rounded-2xl bg-white/5;
+  }
+
+  .winner-card {
+    @apply bg-linear-to-br from-white/10 to-transparent border border-white/5 px-4 py-3 rounded-xl text-center font-bold text-slate-200;
+  }
+
+  .result-modal-overlay {
+    @apply fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-xl;
+  }
+
+  .winner-display-circle {
+    @apply w-48 h-48 md:w-64 md:h-64 rounded-full bg-linear-to-br from-yellow-400 to-orange-600 border-[6px] md:border-8 border-white shadow-[0_0_40px_rgba(251,191,36,0.6)] flex items-center justify-center text-3xl md:text-5xl font-black text-slate-900 p-4 text-center;
+  }
+
+  .confirm-button {
+    @apply mt-12 px-10 py-4 bg-yellow-400 text-black rounded-full font-black text-xl hover:bg-yellow-300 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] active:scale-90 z-120 cursor-pointer flex flex-col items-center;
+  }
+
+  /* 커스텀 스크롤바 */
+  .custom-scrollbar::-webkit-scrollbar { @apply w-1.5; }
+  .custom-scrollbar::-webkit-scrollbar-track { @apply bg-transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { @apply bg-white/10 rounded-full hover:bg-white/20; }
+
+  /* 당첨자 모달 배경 빛무리 */
+  .modal-glow-bg {
+    @apply absolute inset-0 bg-yellow-500/20 blur-[120px] rounded-full animate-pulse;
+  }
+
+  /* 축하 텍스트 스타일 */
+  .congrats-text {
+    @apply text-yellow-400 font-black text-3xl mb-8 tracking-widest animate-bounce;
+  }
+
+  /* 확인 버튼 하단 캡션 */
+  .confirm-button-caption {
+    @apply text-[10px] text-black/50 font-bold mt-1 uppercase tracking-tighter;
+  }
+}

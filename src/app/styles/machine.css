@@ -1,0 +1,72 @@
+@layer utilities {
+  .lotto-machine-wrapper {
+    @apply relative flex flex-col items-center shrink-0 transition-all duration-300;
+  }
+
+  .lotto-canvas-container {
+    @apply relative w-80 h-80 md:w-100 md:h-100;
+  }
+
+  .lotto-outer-ring {
+    @apply absolute inset-0 rounded-full z-20 pointer-events-none border-slate-800 shadow-[inset_0_0_60px_rgba(0,0,0,0.9)];
+    border-width: 12px;
+  }
+
+  @media (min-width: 768px) {
+    .lotto-outer-ring {
+      border-width: 10px;
+    }
+  }
+
+  .lotto-canvas-bg canvas {
+    @apply w-full h-full object-contain;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .lotto-canvas-bg {
+    @apply w-full h-full rounded-full overflow-hidden border border-white/20;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
+    backdrop-filter: blur(8px) saturate(120%);
+    box-shadow: 
+      inset 0 20px 40px rgba(255, 255, 255, 0.2),
+      inset 0 -20px 40px rgba(0, 0, 0, 0.5),
+      0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-sheen {
+    @apply absolute top-[10%] left-[15%] w-[40%] h-[20%] bg-linear-to-b from-white/20 to-transparent rounded-full -rotate-35 pointer-events-none blur-sm;
+  }
+
+  .glass-rim-light {
+    @apply absolute bottom-[5%] right-[20%] w-[30%] h-[10%] bg-white/10 rounded-full blur-md pointer-events-none;
+  }
+
+  .lotto-machine-base {
+    @apply relative w-72 h-24 -mt-6 z-10;
+  }
+
+  .machine-neck {
+    @apply absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 bg-slate-800 border-x-4 border-slate-700 shadow-inner;
+  }
+
+  .machine-base-body {
+    @apply absolute bottom-0 w-full h-20 bg-linear-to-b from-slate-700 via-slate-800 to-slate-950 rounded-2xl border-x-4 border-b-8 border-slate-900 shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center overflow-hidden;
+  }
+
+  .system-status {
+    @apply flex items-center gap-3 mb-2;
+  }
+
+  .status-light {
+    @apply w-3 h-3 rounded-full bg-red-600 animate-pulse shadow-[0_0_15px_#dc2626];
+  }
+
+  .scan-bar-container {
+    @apply w-32 h-1.5 bg-red-900/50 rounded-full overflow-hidden border border-red-500/30;
+  }
+
+  .scan-bar-active {
+    @apply w-1/2 h-full bg-red-500 shadow-[0_0_10px_#ef4444];
+  }
+}

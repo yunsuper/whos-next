@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
-/* 쪼개놓은 파일들을 순서대로 불러옵니다 */
+/* 1. 기능별 스타일 임포트 */
 @import "./styles/layout.css";
 @import "./styles/machine.css";
 @import "./styles/ui.css";
 
+/* 2. 기본 베이스 스타일 */
 @layer base {
   body {
-    /* 배경색이 튀지 않게 기본 배경색 지정 */
     @apply bg-slate-950 antialiased;
+    overflow-x: hidden;
   }
 }
