@@ -74,16 +74,22 @@ export const useAudio = () => {
                 o.stop(ctx.currentTime + i * 0.1 + 0.5);
             });
         } else if (type === "click") {
-            // 버튼 클릭 소리 (사각파)
-            osc.type = "square";
-            osc.frequency.setValueAtTime(400, ctx.currentTime);
-            gain.gain.setValueAtTime(0.05, ctx.currentTime);
+            // 부드러운 사인파 사용
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(800, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(
+                400,
+                ctx.currentTime + 0.03,
+            );
+
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(
                 0.01,
-                ctx.currentTime + 0.05,
+                ctx.currentTime + 0.03,
             );
+
             osc.start();
-            osc.stop(ctx.currentTime + 0.05);
+            osc.stop(ctx.currentTime + 0.03);
         }
     };
 
