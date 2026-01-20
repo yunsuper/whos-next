@@ -44,7 +44,12 @@ export default function ResultModal() {
     return (
         <AnimatePresence>
             {winner && (
-                <div className={cn("result-modal-overlay")}>
+                <div
+                    className={cn("result-modal-overlay")}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="winner-title"
+                >
                     <motion.div
                         initial={{ scale: 0, rotate: -180, opacity: 0 }}
                         animate={{ scale: 1, rotate: 0, opacity: 1 }}
@@ -65,6 +70,7 @@ export default function ResultModal() {
                         <button
                             onClick={handleCloseClick}
                             className={cn("confirm-button")}
+                            aria-label="결과 확인 및 히스토리 저장"
                         >
                             <span>확인 및 저장</span>
                             <span className={cn("confirm-button-caption")}>

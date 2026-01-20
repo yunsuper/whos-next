@@ -57,7 +57,11 @@ export default function InputGroup() {
                     className={cn("input-field")}
                 />
                 {/* 1. 추가 버튼 (기본형) */}
-                <IconButton icon={Plus} onClick={handleAdd} />
+                <IconButton
+                    icon={Plus}
+                    onClick={handleAdd}
+                    ariaLabel="참가자 추가"
+                />
             </div>
 
             <div
@@ -78,12 +82,15 @@ export default function InputGroup() {
                                 iconSize={16}
                                 variant="danger"
                                 onClick={() => removeParticipant(idx)}
+                                ariaLabel={`${p} 삭제`}
                             />
                         </div>
                     ))
                 ) : (
                     <div className={cn("history-empty")}>
-                        <p className="text-xs">참가자를 추가해주세요</p>
+                        <p className="text-xs" text-slate-300>
+                            참가자를 추가해주세요
+                        </p>
                     </div>
                 )}
             </div>
@@ -96,6 +103,7 @@ export default function InputGroup() {
                     isDrawing={isDrawing}
                     onClick={handleDraw}
                     disabled={participants.length === 0 || isDrawing}
+                    ariaLabel="추첨 시작"
                 >
                     {isDrawing ? "MIXING..." : "DRAW"}
                 </IconButton>
@@ -108,6 +116,7 @@ export default function InputGroup() {
                         resetGame();
                         window.location.reload();
                     }}
+                    ariaLabel="게임 초기화"
                 >
                     RESET
                 </IconButton>

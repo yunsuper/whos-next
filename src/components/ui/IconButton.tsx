@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     icon: LucideIcon;
     iconSize?: number;
-    // variant 이름을 css 클래스명과 일치시키거나 매핑합니다.
     variant?: "primary" | "danger" | "draw" | "reset";
     isDrawing?: boolean;
+    ariaLabel?: string;
 }
 
 export default function IconButton({
