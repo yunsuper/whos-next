@@ -6,13 +6,20 @@ import { Trophy } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import LottoCanvas from "@/components/machine/LottoCanvas";
 import InputGroup from "@/components/ui/InputGroup";
 import ResultModal from "@/components/ui/ResultModal";
 
 import { useGameStore } from "@/store/useGameStore";
 import { cn, truncateText } from "@/lib/utils";
 import SupportCard from "@/components/ui/SupportCard";
+import dynamic from "next/dynamic";
+
+const LottoCanvas = dynamic(() => import("@/components/machine/LottoCanvas"), {
+    ssr: false,
+    loading: () => (
+        <div className="w-100 h-100 bg-white/5 rounded-full animate-pulse" />
+    ), 
+});
 
 export default function Home() {
     const { history, loadStorage } = useGameStore();
