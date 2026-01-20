@@ -12,6 +12,7 @@ import ResultModal from "@/components/ui/ResultModal";
 
 import { useGameStore } from "@/store/useGameStore";
 import { cn, truncateText } from "@/lib/utils";
+import SupportCard from "@/components/ui/SupportCard";
 
 export default function Home() {
     const { history, loadStorage } = useGameStore();
@@ -68,7 +69,7 @@ export default function Home() {
                 </section>
 
                 {/* 3-2. 컨트롤러 및 히스토리 섹션 */}
-                <section className="w-full max-w-md flex flex-col gap-8">
+                <section className="w-full max-w-md flex flex-col gap-6">
                     <InputGroup />
 
                     <div className={cn("history-panel")}>
@@ -115,6 +116,8 @@ export default function Home() {
                             </div>
                         )}
                     </div>
+
+                    <SupportCard />
                 </section>
             </div>
 

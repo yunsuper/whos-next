@@ -35,7 +35,7 @@
 
   /* 푸터 */
   .footer-container {
-    @apply w-full py-10 mt-12 flex flex-col items-center justify-center border-t border-white/5 z-10;
+    @apply w-full py-8 mt-4 flex flex-col items-center justify-center border-t border-white/5 z-10;
   }
 
   .footer-brand {
