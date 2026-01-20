@@ -5,20 +5,7 @@
    * 1. 로또 머신 스타일 (Lotto Machine)
    */
   .lotto-machine-wrapper {
-  @apply relative flex flex-col items-center shrink-0 transition-transform duration-300;
-  /* 모바일에서 축소될 때 중앙을 기준으로 줄어들게 설정 */
-  transform-origin: center center; 
-  scale: 0.95; /* 기본 모바일 크기 */
-}
-
-  @media (min-width: 768px) {
-    .lotto-machine-wrapper {
-      @apply scale-100;
-    }
-  }
-
-  .lotto-canvas-container {
-    @apply relative w-100 h-100;
+    @apply relative flex flex-col items-center shrink-0 transition-all duration-300;
   }
 
   .lotto-canvas-container {
@@ -31,14 +18,20 @@
     @apply absolute inset-0 rounded-full z-20 pointer-events-none border-slate-800 shadow-[inset_0_0_60px_rgba(0,0,0,0.9)];
     
     /* [보정] 모바일(기본)에서는 테두리를 12px로 살짝 두껍게 해서 선명하게 보이게 함 */
-    border-width: 12px; 
+      border-width: 12px; 
 
     /* [보정] 테블릿/PC(md 이상)에서는 원래 계획했던 10px로 복구 */
-    @media (min-width: 768px) {
-    .lotto-outer-ring {
-      border-width: 10px;
+      @media (min-width: 768px) {
+      .lotto-outer-ring {
+        border-width: 10px;
+      }
     }
   }
+
+  .lotto-canvas-bg canvas {
+  @apply w-full h-full object-contain; /* Tailwind 클래스만 적용 */
+    width: 100% !important;             /* 강제가 필요한 속성은 표준 CSS로 작성 */
+    height: 100% !important;
   }
 
   /* 실제 캔버스 배경 및 유리 효과 */
