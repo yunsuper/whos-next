@@ -4,10 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useEffect } from "react";
 import { useGameStore } from "@/store/useGameStore";
+import { useAudio } from "@/hooks/useAudio";
 
 export default function ResultModal() {
     const { winners, setWinners, pickWinner } = useGameStore();
     const winner = winners[0];
+    const { playSound } = useAudio();
 
     const handleClose = (e: React.MouseEvent) => {
         // 이벤트 전파 방지 및 확실한 핸들링
@@ -20,6 +22,7 @@ export default function ResultModal() {
 
     useEffect(() => {
         if (winner) {
+            playSound("win");
             const duration = 3 * 1000;
             const animationEnd = Date.now() + duration;
             const defaults = {
@@ -42,7 +45,7 @@ export default function ResultModal() {
 
             return () => clearInterval(interval);
         }
-    }, [winner]);
+    }, [winner, playSound]);
 
     return (
         <AnimatePresence>

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import { useGameStore } from "@/store/useGameStore";
+import { useAudio } from "@/hooks/useAudio";
 
 export default function LottoCanvas() {
     const sceneRef = useRef<HTMLDivElement>(null);
@@ -10,6 +11,7 @@ export default function LottoCanvas() {
     const requestRef = useRef<number | null>(null);
     const { participants, isDrawing } = useGameStore();
     const lastBallsCount = useRef(0);
+    const { playSound } = useAudio();
 
     useEffect(() => {
         if (!sceneRef.current) return;
@@ -158,6 +160,12 @@ export default function LottoCanvas() {
                 const bodies = Matter.Composite.allBodies(
                     engineRef.current.world,
                 );
+
+                const activeBalls = bodies.filter((b) => !b.isStatic);
+                if (activeBalls.length > 0) {
+                    playSound("roll"); // [추가] 섞일 때 달그락 소리 재생
+                }
+
                 bodies.forEach((body) => {
                     if (!body.isStatic) {
                         Matter.Body.applyForce(body, body.position, {
@@ -166,10 +174,10 @@ export default function LottoCanvas() {
                         });
                     }
                 });
-            }, 20);
+            }, 150);
         }
         return () => clearInterval(interval);
-    }, [isDrawing]);
+    }, [isDrawing, playSound]);
 
     return (
         <div className="relative">
