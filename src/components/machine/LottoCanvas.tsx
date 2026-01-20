@@ -180,12 +180,11 @@ export default function LottoCanvas() {
     }, [isDrawing, playSound]);
 
     return (
-        <div className="relative">
-            <div className="absolute inset-0 rounded-full border-10 border-slate-800 shadow-[inset_0_0_60px_rgba(0,0,0,0.9)] z-20 pointer-events-none" />
-            <div
-                ref={sceneRef}
-                className="w-100 h-100 bg-slate-900/40 backdrop-blur-sm rounded-full overflow-hidden border border-white/10"
-            />
+        <div className="lotto-machine-wrapper">
+            <div className="lotto-canvas-container">
+                <div className="lotto-outer-ring" />
+                <div ref={sceneRef} className="lotto-canvas-bg" />
+            </div>
         </div>
     );
 }
