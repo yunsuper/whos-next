@@ -19,11 +19,12 @@ export default function IconButton({
     isDrawing = false,
     className,
     children,
+    ariaLabel,
     ...props
 }: IconButtonProps) {
     const variantClasses = {
         primary: "bg-yellow-500 text-black p-2 rounded-lg",
-        danger: "text-slate-500 hover:text-red-400",
+        danger: "text-slate-300 hover:text-red-400",
         reset: "reset-button",
         draw: isDrawing
             ? "draw-button draw-button-mixing"
@@ -32,6 +33,7 @@ export default function IconButton({
 
     return (
         <button
+            aria-label={ariaLabel}
             className={cn(
                 "active:scale-95 transition-transform disabled:opacity-50 disabled:grayscale",
                 variantClasses[variant],

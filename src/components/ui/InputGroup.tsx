@@ -88,7 +88,7 @@ export default function InputGroup() {
                     ))
                 ) : (
                     <div className={cn("history-empty")}>
-                        <p className="text-xs" text-slate-300>
+                        <p className="text-xs">
                             참가자를 추가해주세요
                         </p>
                     </div>
