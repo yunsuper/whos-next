@@ -15,7 +15,7 @@
 
 | 메인 추첨 화면 | 당첨자 발표 모달 |
 | :---: | :---: |
-| ![Main Screen](https://github.com/user-attachments/assets/0265fcc0-3764-4584-931c-566ac8ab5122) | ![Result Modal](https://github.com/user-attachments/assets/a7979aad-af43-4d53-939e-167f562f5f6d) |
+| <img src="https://github.com/user-attachments/assets/0265fcc0-3764-4584-931c-566ac8ab5122" width="400"> | <img src="https://github.com/user-attachments/assets/a7979aad-af43-4d53-939e-167f562f5f6d" width="200">  |
 ---
 
 ## ✨ 주요 기능
