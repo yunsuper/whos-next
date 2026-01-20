@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
-import { truncateText } from "@/lib/utils";
 import { SoundType } from "@/types";
+import { createBall, drawBallName } from "@/components/machine/Ball";
 
 interface UseMatterProps {
     sceneRef: React.RefObject<HTMLDivElement | null>;
@@ -59,36 +59,26 @@ export const useMatter = ({
             Matter.World.add(engine.world, wall);
         }
 
-        // 2. 렌더링 및 탈출 방지
+        // 2. 렌더링 이벤트 (공 이름 그리기 및 탈출 방지)
         Matter.Events.on(render, "afterRender", () => {
             const context = render.context;
-            context.font = "bold 12px Arial";
-            context.textAlign = "center";
-            context.textBaseline = "middle";
-            context.fillStyle = "#ffffff";
-
             const bodies = Matter.Composite.allBodies(engine.world);
+
             bodies.forEach((body) => {
+                // 원형 벽(Rectangle Body)이 아닌 공 객체만 처리
                 if (body.label && body.label !== "Rectangle Body") {
                     const dx = body.position.x - CENTER;
                     const dy = body.position.y - CENTER;
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
+                    // 탈출 방지 로직
                     if (distance > RADIUS + 20) {
                         Matter.Body.setPosition(body, { x: CENTER, y: 120 });
                         Matter.Body.setVelocity(body, { x: 0, y: 1 });
                     }
 
-                    context.save();
-                    context.translate(body.position.x, body.position.y);
-                    context.rotate(body.angle);
-
-                    // [수정] 직접 substring 하던 로직을 유틸리티 함수로 교체
-                    // 훨씬 읽기 편하고 깔끔합니다.
-                    const displayName = truncateText(body.label, 5);
-
-                    context.fillText(displayName, 0, 0);
-                    context.restore();
+                    // [Ball.ts 유틸리티 사용]
+                    drawBallName(context, body);
                 }
             });
         });
@@ -109,12 +99,13 @@ export const useMatter = ({
         };
     }, [sceneRef]);
 
-    // ... 이하 공 추가 및 섞기 로직 (동일)
+    // 3. 참가자 명단 변경 시 공 추가/제거
     useEffect(() => {
         const engine = engineRef.current;
         const world = engine.world;
         const currentBodies = Matter.Composite.allBodies(world);
 
+        // 제거된 참가자 공 삭제
         currentBodies.forEach((body) => {
             if (
                 body.label &&
@@ -125,32 +116,20 @@ export const useMatter = ({
             }
         });
 
+        // 새 참가자 공 추가
         if (participants.length > lastBallsCount.current) {
             const diff = participants.length - lastBallsCount.current;
             for (let i = 0; i < diff; i++) {
                 const name = participants[lastBallsCount.current + i];
-                const color = [
-                    "#FACC15",
-                    "#60A5FA",
-                    "#F87171",
-                    "#4ADE80",
-                    "#A78BFA",
-                ][(lastBallsCount.current + i) % 5];
-                const ball = Matter.Bodies.circle(
+
+                // [Ball.ts 유틸리티 사용]
+                const ball = createBall(
                     CENTER + (Math.random() * 20 - 10),
                     100,
-                    18,
-                    {
-                        restitution: 0.8,
-                        friction: 0.01,
-                        label: name,
-                        render: {
-                            fillStyle: color,
-                            strokeStyle: "rgba(255,255,255,0.5)",
-                            lineWidth: 3,
-                        },
-                    },
+                    name,
+                    lastBallsCount.current + i,
                 );
+
                 Matter.Body.setVelocity(ball, { x: 0, y: 2 });
                 Matter.World.add(world, ball);
             }
@@ -158,6 +137,7 @@ export const useMatter = ({
         lastBallsCount.current = participants.length;
     }, [participants]);
 
+    // 4. 추첨(Mixing) 물리 효과
     useEffect(() => {
         let interval: NodeJS.Timeout;
         if (isDrawing) {
@@ -166,7 +146,9 @@ export const useMatter = ({
                     engineRef.current.world,
                 );
                 const activeBalls = bodies.filter((b) => !b.isStatic);
+
                 if (activeBalls.length > 0) playSound("roll");
+
                 bodies.forEach((body) => {
                     if (!body.isStatic) {
                         Matter.Body.applyForce(body, body.position, {

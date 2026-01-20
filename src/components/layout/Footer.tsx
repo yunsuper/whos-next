@@ -19,8 +19,7 @@ export default function Footer() {
                     &copy; {new Date().getFullYear()} All Rights Reserved.
                 </p>
 
-                {/* 하단에 아주 미세한 레드 라인 포인트 (시스템 활성 느낌) */}
-                <div className="w-8 h-1px bg-red-500/30 mt-4 shadow-[0_0_8px_#ef4444]" />
+                <div className="w-20 h-px bg-red-500/60 mt-4 shadow-[0_0_8px_#ef4444]" />
             </motion.div>
         </footer>
     );

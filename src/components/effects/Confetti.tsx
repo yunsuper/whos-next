@@ -22,12 +22,10 @@ export const triggerConfetti = () => {
 
         const particleCount = 50 * (timeLeft / duration);
 
-        // 다양한 위치에서 터지는 효과
         confetti({
             ...defaults,
             particleCount,
             origin: { x: Math.random(), y: Math.random() - 0.2 },
-            // yunsuper님 머신 디자인에 어울리는 골드 & 화이트 & 오렌지 톤
             colors: ["#FACC15", "#FB923C", "#FFFFFF", "#F59E0B"],
         });
     }, 250);

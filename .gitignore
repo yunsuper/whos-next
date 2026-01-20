@@ -39,3 +39,25 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Mac (이미 있는 .DS_Store와 함께 추가)
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE - VS Code (프로젝트 설정 파일이 깃에 올라가는 것을 방지)
+.vscode/*
+!.vscode/extensions.json
+.history/
+
+# IDE - WebStorm/JetBrains
+.idea/
+
+# Local History
+.history/

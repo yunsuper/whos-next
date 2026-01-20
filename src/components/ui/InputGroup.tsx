@@ -5,6 +5,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { Plus, Play, RotateCcw, Trash2 } from "lucide-react";
 import { useAudio } from "@/hooks/useAudio";
 import { cn } from "@/lib/utils";
+import IconButton from "./IconButton";
 
 export default function InputGroup() {
     const [text, setText] = useState("");
@@ -46,7 +47,6 @@ export default function InputGroup() {
 
     return (
         <div className={cn("control-panel")}>
-            {/* 입력 섹션 */}
             <div className="flex gap-2 mb-6">
                 <input
                     type="text"
@@ -56,17 +56,10 @@ export default function InputGroup() {
                     placeholder="팀 이름이나 참가자 입력"
                     className={cn("input-field")}
                 />
-                <button
-                    onClick={handleAdd}
-                    className={cn(
-                        "bg-yellow-500 text-black p-2 rounded-lg active:scale-95 transition-transform",
-                    )}
-                >
-                    <Plus />
-                </button>
+                {/* 1. 추가 버튼 (기본형) */}
+                <IconButton icon={Plus} onClick={handleAdd} />
             </div>
 
-            {/* 리스트 섹션 */}
             <div
                 className={cn(
                     "space-y-2 max-h-48 overflow-y-auto mb-6 custom-scrollbar",
@@ -79,14 +72,13 @@ export default function InputGroup() {
                             className={cn("participant-item")}
                         >
                             <span className="text-sm font-medium">{p}</span>
-                            <button
+                            {/* 2. 삭제 버튼 (danger 변체) */}
+                            <IconButton
+                                icon={Trash2}
+                                iconSize={16}
+                                variant="danger"
                                 onClick={() => removeParticipant(idx)}
-                                className={cn(
-                                    "text-slate-500 hover:text-red-400",
-                                )}
-                            >
-                                <Trash2 size={16} />
-                            </button>
+                            />
                         </div>
                     ))
                 ) : (
@@ -96,32 +88,29 @@ export default function InputGroup() {
                 )}
             </div>
 
-            {/* 하단 버튼 섹션 */}
             <div className="grid grid-cols-2 gap-3">
-                <button
+                {/* 3. 추첨 버튼 (draw 변체 - CSS의 draw-button 시리즈 자동 적용) */}
+                <IconButton
+                    icon={Play}
+                    variant="draw"
+                    isDrawing={isDrawing}
                     onClick={handleDraw}
                     disabled={participants.length === 0 || isDrawing}
-                    className={cn(
-                        "draw-button",
-                        isDrawing ? "draw-button-mixing" : "draw-button-active",
-                        participants.length === 0 &&
-                            "opacity-50 grayscale cursor-not-allowed",
-                    )}
                 >
-                    <Play size={20} fill="currentColor" />
-                    <span>{isDrawing ? "MIXING..." : "DRAW"}</span>
-                </button>
+                    {isDrawing ? "MIXING..." : "DRAW"}
+                </IconButton>
 
-                <button
+                {/* 4. 리셋 버튼 (reset 변체 - CSS의 reset-button 자동 적용) */}
+                <IconButton
+                    icon={RotateCcw}
+                    variant="reset"
                     onClick={() => {
                         resetGame();
                         window.location.reload();
                     }}
-                    className={cn("reset-button active:scale-95")}
                 >
-                    <RotateCcw size={20} />
-                    <span>RESET</span>
-                </button>
+                    RESET
+                </IconButton>
             </div>
         </div>
     );
