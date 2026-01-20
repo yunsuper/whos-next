@@ -5,9 +5,11 @@
    * 1. 로또 머신 스타일 (Lotto Machine)
    */
   .lotto-machine-wrapper {
-    /* 모바일에서는 0.85배, PC(min-width: 768px)에서는 1배 */
-    @apply relative flex flex-col items-center shrink-0 scale-[0.85] transition-transform duration-300;
-  }
+  @apply relative flex flex-col items-center shrink-0 transition-transform duration-300;
+  /* 모바일에서 축소될 때 중앙을 기준으로 줄어들게 설정 */
+  transform-origin: center center; 
+  scale: 0.95; /* 기본 모바일 크기 */
+}
 
   @media (min-width: 768px) {
     .lotto-machine-wrapper {
@@ -41,8 +43,24 @@
 
   /* 실제 캔버스 배경 및 유리 효과 */
   .lotto-canvas-bg {
-    @apply w-full h-full bg-slate-900/40 backdrop-blur-sm 
-           rounded-full overflow-hidden border border-white/10;
+    @apply w-full h-full rounded-full overflow-hidden border border-white/20;
+    /* 1. 심도 깊은 유리 효과: 배경 흐림 + 굴절 느낌의 내부 그림자 */
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
+    backdrop-filter: blur(8px) saturate(120%);
+    box-shadow: 
+      inset 0 20px 40px rgba(255, 255, 255, 0.2), /* 상단 내부 광택 */
+      inset 0 -20px 40px rgba(0, 0, 0, 0.5),    /* 하단 내부 그림자 */
+      0 10px 30px rgba(0, 0, 0, 0.5);            /* 외부 그림자 */
+  }
+
+  .glass-sheen {
+    @apply absolute top-[10%] left-[15%] w-[40%] h-[20%] bg-linear-to-b from-white/20 to-transparent 
+           rounded-full -rotate-35 pointer-events-none blur-sm;
+  }
+
+  .glass-rim-light {
+    @apply absolute bottom-[5%] right-[20%] w-[30%] h-[10%] bg-white/10 
+           rounded-full blur-md pointer-events-none;
   }
 
   /* 하단 받침대 섹션 */
@@ -196,5 +214,25 @@
 
   .scan-bar-active {
     @apply w-1/2 h-full bg-red-500 shadow-[0_0_10px_#ef4444];
+  }
+
+  /* 푸터 레이아웃 */
+  .footer-container {
+    @apply w-full py-10 mt-12 flex flex-col items-center justify-center border-t border-white/5 z-10;
+  }
+
+  /* 제작자 텍스트 스타일 */
+  .footer-brand {
+    @apply text-slate-500 text-sm font-medium tracking-[0.2em] uppercase transition-colors hover:text-yellow-500;
+  }
+
+  .footer-name {
+    @apply font-black text-slate-400 ml-2 hover:text-white transition-all;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+
+  /* 저작권 문구 */
+  .footer-copy {
+    @apply text-[10px] text-slate-600 mt-2 font-mono uppercase tracking-widest;
   }
 }

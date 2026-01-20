@@ -6,6 +6,7 @@ import ResultModal from "@/components/ui/ResultModal";
 import { useGameStore } from "@/store/useGameStore";
 import { Trophy } from "lucide-react";
 import { motion } from "framer-motion";
+import Footer from "@/components/layout/Footer";
 
 export default function Home() {
     const { history } = useGameStore();
@@ -102,6 +103,7 @@ export default function Home() {
             </div>
 
             <ResultModal />
+            <Footer />
         </main>
     );
 }
