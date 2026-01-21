@@ -1,69 +1,67 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { GameState } from "@/types";
-import { storage } from "@/lib/utils";
 
-export const useGameStore = create<GameState>((set) => ({
-    // 서버와의 초기 HTML 일치를 위해 초기값은 빈 배열로 고정합니다.
-    participants: [],
-    winners: [],
-    history: [],
-    isDrawing: false,
+/**
+ * Zustand Persist 미들웨어를 사용하여 로컬스토리지와 자동 동기화되는 스토어입니다.
+ * 이제 storage.set을 수동으로 호출할 필요가 없습니다.
+ */
+export const useGameStore = create<GameState>()(
+    persist(
+        (set) => ({
+            participants: [],
+            winners: [],
+            history: [],
+            isDrawing: false,
 
-    loadStorage: () => {
-        const savedParticipants = storage.get<string[]>("participants") || [];
-        const savedHistory = storage.get<string[]>("history") || [];
-        set({
-            participants: savedParticipants,
-            history: savedHistory,
-        });
-    },
+            loadStorage: () => {},
 
-    addParticipant: (name: string) =>
-        set((state) => {
-            const newList = [...state.participants, name];
-            storage.set("participants", newList);
-            return { participants: newList };
+            addParticipant: (name: string) =>
+                set((state) => ({
+                    participants: [...state.participants, name],
+                })),
+
+            removeParticipant: (index: number) =>
+                set((state) => ({
+                    participants: state.participants.filter(
+                        (_, i) => i !== index,
+                    ),
+                })),
+
+            setIsDrawing: (isDrawing: boolean) => set({ isDrawing }),
+
+            setWinners: (winners: string[]) => set({ winners }),
+
+            addToHistory: (winner: string) =>
+                set((state) => ({
+                    history: [...state.history, winner],
+                })),
+
+            resetGame: () =>
+                set({
+                    participants: [],
+                    winners: [],
+                    history: [],
+                    isDrawing: false,
+                }),
+
+            pickWinner: (winnerName: string) =>
+                set((state) => ({
+                    participants: state.participants.filter(
+                        (p) => p !== winnerName,
+                    ),
+                    history: [...state.history, winnerName],
+                })),
         }),
-
-    removeParticipant: (index: number) =>
-        set((state) => {
-            const newList = state.participants.filter((_, i) => i !== index);
-            storage.set("participants", newList);
-            return { participants: newList };
-        }),
-
-    setIsDrawing: (isDrawing: boolean) => set({ isDrawing }),
-
-    setWinners: (winners: string[]) => set({ winners }),
-
-    addToHistory: (winner: string) =>
-        set((state) => {
-            const newHistory = [...state.history, winner];
-            storage.set("history", newHistory);
-            return { history: newHistory };
-        }),
-
-    resetGame: () => {
-        // 리셋 시 스토리지도 비워줌
-        storage.set("participants", []);
-        storage.set("history", []);
-        set({ participants: [], winners: [], history: [], isDrawing: false });
-    },
-
-    pickWinner: (winnerName: string) =>
-        set((state) => {
-            const newParticipants = state.participants.filter(
-                (p) => p !== winnerName,
-            );
-            const newHistory = [...state.history, winnerName];
-
-            // 변경된 데이터 모두 저장
-            storage.set("participants", newParticipants);
-            storage.set("history", newHistory);
-
-            return {
-                participants: newParticipants,
-                history: newHistory,
-            };
-        }),
-}));
+        {
+            name: "lucky-draw-storage",
+            storage: createJSONStorage(() => localStorage),
+            // 저장할 데이터만 골라냅니다.
+            // isDrawing 같은 일시적인 상태는 저장하지 않도록 설정.
+            partialize: (state) => ({
+                participants: state.participants,
+                history: state.history,
+            }),
+        },
+    ),
+);

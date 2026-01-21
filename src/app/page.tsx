@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy } from "lucide-react";
 
@@ -22,11 +22,26 @@ const LottoCanvas = dynamic(() => import("@/components/machine/LottoCanvas"), {
 });
 
 export default function Home() {
-    const { history, loadStorage } = useGameStore();
+    const [isHydrated, setIsHydrated] = useState(false);
+    const { history } = useGameStore();
 
     useEffect(() => {
-        loadStorage();
-    }, [loadStorage]);
+        const timer = setTimeout(() => {
+            setIsHydrated(true);
+        }, 0);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (!isHydrated) {
+        return (
+            <main
+                className={cn("main-layout flex items-center justify-center")}
+            >
+                <div className="w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+            </main>
+        );
+    }
 
     return (
         <main className={cn("main-layout")}>
