@@ -21,6 +21,7 @@ export const useMatter = ({
     const engineRef = useRef(Matter.Engine.create());
     const requestRef = useRef<number | null>(null);
     const lastBallsCount = useRef(0);
+    const lastTimeRef = useRef<number>(0);
 
     const FIXED_SIZE = 400;
     const CENTER = 200;
@@ -83,8 +84,17 @@ export const useMatter = ({
             });
         });
 
-        const update = () => {
-            Matter.Engine.update(engine, 1000 / 60);
+        // [수정] 델타 타이밍이 적용된 업데이트 로직 (60Hz 고정말고 기기에 따라 유동적으로)
+        const update = (currentTime: number) => {
+            const engine = engineRef.current;
+
+            const delta = currentTime - lastTimeRef.current;
+            lastTimeRef.current = currentTime;
+
+            const correctedDelta = Math.min(delta, 33.33);
+
+            Matter.Engine.update(engine, correctedDelta);
+
             requestRef.current = requestAnimationFrame(update);
         };
 
